@@ -29,32 +29,43 @@ for znak in zawartosc_pliku:
     binary_representation = bin(znak_code)[2:]
     binary_string = binary_string + binary_representation
 
-#print(binary_string)
-#print(type(binary_string))
 # int_representation to reprezentacja binary_string w postaci int
 int_representation = int(binary_string, 2)
-#print(int_representation)
-#print(type(int_representation))
 
 # jesli dlugosc binary_string jest wielokrotnoscia 32 to do X_1 przypisujemy int_representation
 if(len(binary_string) % 32 == 0):
     X_1 = int_representation
-# w przeciwnym przypdaku oprocz przypisania uzupelniamy zerami aby dlugosc X_1 byla wielokrotnoscia 32
+# w przeciwnym przypadku oprocz przypisania uzupelniamy zerami aby dlugosc X_1 byla wielokrotnoscia 32
 else:
     X_1 = int_representation
     while(len(bin(X_1)[2:]) % 32 != 0):
         # przesuniecie bitowe, tak aby po lewej stronie dopisywac '0' aby uzyskac zmienna o dlugosci (w bitach) rowna wielokrotnosci 32
         X_1 = X_1 << 1
-print(X_1)
-X_1 = X_1 << 64
-#X_1_bin = bin(X_1)[2:]
-#print(X_1_bin)
+
 # dlugosc wartosci wejsciowej prezentujemy jako osmiobajtoey integer i dodajemy do X_2
-# najpierw nalezy zamienic na reprezentacje dziesietna 
-# a nastepnie na szesnastkowa
+# dlugosc binary_string zamieniamy na int
 binary_string_len = len(binary_string)
 b_s_len_int = int(binary_string_len)
-print(b_s_len_int)
+
+# przesuwamy X_1 o 64 bity (8 bajtow) 
+# poniewaz nasze X_2 ma byc X_1 + dlugosc wartosci wejsciowej jako osmiobajtowy integer
+# wiec jak dodamy do X_1 b_s_len_int to otrzymamy wartosc wejsciowa i po niej osmiobajtowy integer dlugosci wartosci wejsciowej
+X_1 = X_1 << 64
+X_2 = X_1 + b_s_len_int
+
+# podzial otrzymanej wartosci po 4 bajty (32 bity)
+# bedzie to wykorzystywane w pozostalych funkcjach 
+# X_2_koncowa - tablica przegowujaca po 4 bajty wartosci koncowej
+X_2_koncowa = []
+for i in range(0, int((len(bin(X_2)[2:]))/32)):
+    # w naszej zmiennej temp pozostaja ostatnie (najmlodsze) bity wartosci wejsciowej 
+    temp = X_2 & 0xffffffff
+    # wpisujemy je do tablicy
+    X_2_koncowa.append(temp)
+    # nastepnie przesuwamy o 32 bity w prawo aby zajac sie nastepnymi 32 bitami
+    X_2 = X_2 >> 32
+print(X_2_koncowa)
+
 """
 print(b_s_len_int)
 print(bin(b_s_len_int)[2:])
@@ -67,9 +78,11 @@ print(X_2)
 X_2_int = int(X_2,2)
 print(X_2_int)
 """
-X_2 = X_1 + b_s_len_int
-print(X_2)
-print(bin(X_2)[2:])
+
+
+
+
+
 
 """
 # podzial otrzymanej wartosci po 4 bajty
