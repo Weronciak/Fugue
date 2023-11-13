@@ -70,6 +70,7 @@ print(X_2_int)
 X_2 = X_1 + b_s_len_int
 print(X_2)
 print(bin(X_2)[2:])
+
 """
 # podzial otrzymanej wartosci po 4 bajty
 # bedzie to wykorzystywane w pozostalych funcjach 
