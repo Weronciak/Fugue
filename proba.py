@@ -176,11 +176,16 @@ vector_IV = np.matrix([[0xe9, 0x66, 0xe0, 0xd2, 0xf9, 0xfb, 0x91, 0x34],
                        [0xde, 0x5f, 0x68, 0x94, 0x1d, 0xde, 0x99, 0x48]])
 print(vector_IV)
 """
-"""
+# parametry:
+# s - rozmiar stanu, liczba 4 bajtowych kolumn 
 s = 30
+# n - rozmiar wyjscia
 n = 8
+# k - liczba pod-rund na jedna runde
 k = 2
+# r - liczba rund w pierwszej fazie koncowej transformacji G
 r = 5
+# t - liczba rund w drugiej fazie koncowej transformacji G
 t = 13
 
 # Inicjalize State
