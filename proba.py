@@ -182,12 +182,15 @@ n = 8
 k = 2
 r = 5
 t = 13
+
 # Inicjalize State
 # for j in range(0, s - 1 - n):
 # S[:,j] = 0
+# for j in range(0, n-1):
+# S[:, s-n+j] = IV[:,j]
 # zamiast wykonac for powyzej stworzylam macierz zerowa 4x30 
 # i ostatnie kolumny zamieniam na wektor inicjalizujacy
-S = np.full((4, 30), '00', dtype='U2')
+S = np.zeros((4, 30), dtype = int)
 for j in range(0, n):
     S[:, (s - n + j)]= vector_IV[:, j].flatten()
 print(S)
