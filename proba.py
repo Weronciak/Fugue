@@ -195,7 +195,13 @@ for j in range(0, n):
     S[:, (s - n + j)]= vector_IV[:, j].flatten()
 print(S)
 
+
 # TIX[s,k](P)
-
-
-"""
+for j in range(0, len(X_2_koncowa)):
+    P = [(X_2_koncowa[j] >> 24) & 0xff, (X_2_koncowa[j] >> 16) & 0xff ,(X_2_koncowa[j] >> 8) & 0xff, X_2_koncowa[j] & 0xff]
+    S[:, 6*k - 2] = S[:, 6*k - 2] ^ S[:, 0]
+    S[:, 0] = P
+    S[:, 8] = S[:, 8] ^ S[:, 0]
+    for i in range(0, k-1):
+        S[:, 3*i + 1] = S[:, 3*i + 1] ^ S[:, s - 3*k + 3*i]
+print(S)
