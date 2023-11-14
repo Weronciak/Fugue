@@ -203,10 +203,27 @@ print(S)
 
 # TIX[s,k](P)
 for j in range(0, len(X_2_koncowa)):
+    # tworze wektor 4 bajtowy 
+    # biore wartosc zmiennej i przesuwam o podana ilosc bitow za pomoca >> w prawo a nastepnie biore otatnie (najmlodsze) 8 bitow
     P = [(X_2_koncowa[j] >> 24) & 0xff, (X_2_koncowa[j] >> 16) & 0xff ,(X_2_koncowa[j] >> 8) & 0xff, X_2_koncowa[j] & 0xff]
+    # S_6k-2 += S_0
     S[:, 6*k - 2] = S[:, 6*k - 2] ^ S[:, 0]
+    # S_0 = P
     S[:, 0] = P
+    # S_8 += S_0
     S[:, 8] = S[:, 8] ^ S[:, 0]
     for i in range(0, k-1):
+        # S_3i+1 += S_s-3k+3i
         S[:, 3*i + 1] = S[:, 3*i + 1] ^ S[:, s - 3*k + 3*i]
+print(S)
+
+# ROR3
+# rotacja kolumn macierzy S w prawo o 3 kolumny
+# trzeba zrobic kopie macierzy S, 
+# poniewaz temp = S powoduje ze do zmiennej temp oraz S przypisana jest ta sama macierz
+temp = S.copy()
+for i in range(0, s):
+    # indeks kolumny, modulo 30 zeby uniknac ujemnych wartosci
+    j = (i - 3) % 30
+    S[:, i] = temp[:, j]
 print(S)
