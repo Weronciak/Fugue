@@ -143,6 +143,23 @@ def RORn(S, n):
         S[:, i] = temp[:, j]
     return S
 
+# CMIX
+# mieszanie kolumn
+def CMIX(S):
+    # S_0 += S_4
+    S[:, 0] = S[:, 0] ^ S[:, 4]
+    # S_1 += S_5
+    S[:, 1] = S[:, 1] ^ S[:, 5]
+    # S_2 += S_6
+    S[:, 2] = S[:, 2] ^ S[:, 6]
+    # S_15 += S_4
+    S[:, 15] = S[:, 15] ^ S[:, 4]
+    # S_16 += S_5
+    S[:, 16] = S[:, 16] ^ S[:, 5]
+    # S_17 += S_6
+    S[:, 17] = S[:, 17] ^ S[:, 6]
+    return S
+
 # otwieramy plik do odczytu
 # przypisujemy zawartosc pliku do zmiennej zawartosc_pliku
 # zamykamy plik
