@@ -243,3 +243,17 @@ S[:, 2] = S[:, 2] ^ S[:, 6]
 # S_s/2+2 += S_6
 S[:, (s//2 + 2)] = S[:, (s//2 + 2)] ^ S[:, 6]
 print(S)
+
+"""
+# Inicjalize State
+# for j in range(0, 22):
+# S[:,j] = 0
+# for j in range(0, 8):
+# S[:, 22 + j] = IV[:,j]
+# zamiast wykonac for powyzej stworzylam macierz int zerowa 4x30 
+# i ostatnie kolumny zamieniam na wektor inicjalizujacy
+S = np.zeros((4, 30), dtype = int)
+for j in range(0, 8):
+    S[:, 22 + j] = vector_IV[:, j].flatten()
+print(S)
+
