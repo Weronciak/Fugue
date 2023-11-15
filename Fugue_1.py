@@ -131,6 +131,17 @@ def TIX(P_i, S):
     S[:, 1] = S[:, 1] ^ S[:, 24]
     return S
 
+# RORn
+# rotacja kolumn macierzy S w prawo o n kolumn
+def RORn(S, n):
+    # trzeba zrobic kopie macierzy S, 
+    # poniewaz temp = S powoduje ze do zmiennej temp oraz S przypisana jest ta sama macierz i przy zmianie macierzy zmienia sie zarowno S jak i temp
+    temp = S.copy()
+    for i in range(0, 30):
+        # indeks kolumny, modulo 30 zeby uniknac ujemnych wartosci
+        j = (i - n) % 30
+        S[:, i] = temp[:, j]
+    return S
 
 # otwieramy plik do odczytu
 # przypisujemy zawartosc pliku do zmiennej zawartosc_pliku
