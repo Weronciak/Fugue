@@ -277,3 +277,18 @@ def TIX(P_i, S):
 for i in range(0, len(X_2_koncowa)):
     S = TIX(X_2_koncowa[i], S)
 print("po tix", S)
+
+# RORn
+# rotacja kolumn macierzy S w prawo o n kolumn
+def RORn(S, n):
+    # trzeba zrobic kopie macierzy S, 
+    # poniewaz temp = S powoduje ze do zmiennej temp oraz S przypisana jest ta sama macierz i przy zmianie macierzy zmienia sie zarowno S jak i temp
+    temp = S.copy()
+    for i in range(0, 30):
+        # indeks kolumny, modulo 30 zeby uniknac ujemnych wartosci
+        j = (i - n) % 30
+        S[:, i] = temp[:, j]
+    return S
+
+S = RORn(S, 3)
+print(S)
