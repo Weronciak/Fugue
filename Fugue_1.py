@@ -115,6 +115,22 @@ def Inicjalize_State(vector_IV):
     print(S)
     return S
 
+# TIX(P_i)
+# dla kazdego elementu P_i ktory jest elementem z x_2
+def TIX(P_i, S):
+    # tworze wektor 4 bajtowy  P
+    # biore wartosc zmiennej i przesuwam o podana ilosc bitow za pomoca >> w prawo a nastepnie biore otatnie (najmlodsze) 8 bitow
+    vector_P = [(P_i >> 24) & 0xff, (P_i >> 16) & 0xff ,(P_i >> 8) & 0xff, P_i & 0xff]
+    # S_10 += S_0
+    S[:, 10] = S[:, 10] ^ S[:, 0]
+    # S_0 = I
+    S[:, 0] = vector_P
+    # S_8 += S_0
+    S[:, 8] = S[:, 8] ^ S[:, 0]
+    # S_1 += S_24
+    S[:, 1] = S[:, 1] ^ S[:, 24]
+    return S
+
 
 # otwieramy plik do odczytu
 # przypisujemy zawartosc pliku do zmiennej zawartosc_pliku
