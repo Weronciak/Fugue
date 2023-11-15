@@ -95,9 +95,26 @@ def Padding(zawartosc_pliku):
         X_2_koncowa.append(temp)
         # nastepnie przesuwamy o 32 bity w prawo aby zajac sie nastepnymi 32 bitami
         X_2 = X_2 >> 32
+    print("Z paddingu otrzymalismy:")
     print(X_2_koncowa)
-
     return X_2_koncowa
+
+# Inicjalize State
+# tworzymy macierz S o 30 4 bajtowych kolumnach taka ze S_0,...,21 = 0   S_22,...,29 = IV
+# for j in range(0, 22):
+# S[:,j] = 0
+# for j in range(0, 8):
+# S[:, 22 + j] = IV[:,j]
+def Inicjalize_State(vector_IV):
+    # zamiast wykonac for powyzej stworzylam macierz int zerowa 4x30 
+    # i ostatnie kolumny zamieniam na wektor inicjalizujacy
+    S = np.zeros((4, 30), dtype = int)
+    for j in range(0, 8):
+        S[:, 22 + j] = vector_IV[:, j].flatten()
+    print("Macierz po Inicjalize State:")
+    print(S)
+    return S
+
 
 # otwieramy plik do odczytu
 # przypisujemy zawartosc pliku do zmiennej zawartosc_pliku
@@ -105,4 +122,7 @@ def Padding(zawartosc_pliku):
 file_p = open("plik_tekst.txt", mode = 'r')
 zawartosc_pliku = file_p.read()
 file_p.close()
+# wykonanie paddingu na zawartosci z pliku
 X_2 = Padding(zawartosc_pliku)
+# tworzenie stanu S
+S = Inicjalize_State(vector_IV)
