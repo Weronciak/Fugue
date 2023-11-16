@@ -160,6 +160,22 @@ def CMIX(S):
     S[:, 17] = S[:, 17] ^ S[:, 6]
     return S
 
+# S-BOX
+# skrzynka podstawieniowa
+def S_BOX (s_box, S):
+    # po wierszach w macierzy S
+    for i in range(0, 4):
+        # po kolumnach w macierzy S
+        for j in range(0, 30):
+            # column to nr kolumny w s_box
+            # column to ostatnia 4 bitowa wartosc S[i, j]
+            column = S[i, j] & 0xf
+            # row to nr wiersza w s_box
+            # nastepnie przsuwamy wartosc S[i,j] o 4 bity i odczytujemy 4 ostatnie bity jako row
+            row = (S[i, j] >> 4) & 0xf
+            # przypisujemy do S[i,j] wartosc z s_box[row][column]
+            S[i, j] = s_box[row][ column]
+    return S
 # otwieramy plik do odczytu
 # przypisujemy zawartosc pliku do zmiennej zawartosc_pliku
 # zamykamy plik
