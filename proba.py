@@ -311,3 +311,21 @@ def CMIX(S):
     return S
 S = CMIX(S)
 print("C", S)
+
+def S_BOX (s_box, S):
+    # po wierszach w macierzy S
+    for i in range(0, 4):
+        # po kolumnach w macierzy S
+        for j in range(0, 30):
+            # column to nr kolumny w s_box
+            # column to ostatnia 4 bitowa wartosc S[i, j]
+            column = S[i, j] & 0xf
+            # row to nr wiersza w s_box
+            # nastepnie przsueamy wartosc S[i,j] o 4 bity i odczytujemy 4 ostatnie bity jako row
+            row = (S[i, j] >> 4) & 0xf
+            #print(type(int(row)))
+            S[i, j] = s_box[row][ column]
+    return S
+
+S = S_BOX(s_box, S)
+print("S-box", S)
