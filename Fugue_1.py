@@ -243,5 +243,59 @@ zawartosc_pliku = file_p.read()
 file_p.close()
 # wykonanie paddingu na zawartosci z pliku
 X_2 = Padding(zawartosc_pliku)
-# tworzenie stanu S
+
+# tworzenie macierzy stanu S
 S = Inicjalize_State(vector_IV)
+
+# The Round Transformation R
+for i in range(0, len(X_2)):
+    # wykonanie TIX
+    S = TIX(X_2[i], S)
+    # wykonanie ROR3
+    S = RORn(S, 3)
+    # wykonanie CMIX
+    S = CMIX(S)
+    # wykonanie SMIX
+    S = SMIX(S)
+    # wykonanie ROR3
+    S = RORn(S, 3)
+    # wykonanie CMIX
+    S = CMIX(S)
+    # wykonanie SMIX
+    S = SMIX(S)
+
+print("Macierz S po Round Transfotmatoin R")
+print(S)
+
+# The Final Round G
+# wykonanie 10 razy {ROR3;CMIX;SMIX}
+for i in range(0, 10):
+    # wykoanie ROR3
+    S = RORn(S, 3)
+    # wykonanie CMIX
+    S = CMIX(S)
+    # wykonanie SMIX
+    S = SMIX(S)
+# wykonanie 13 razy:
+# S_4 += S_0; S_15 += S_0; ROR15; SMIX
+# S_4 += S_0; S_16 += S_0; ROR14; SMIX
+for j in range(0, 13):
+    S[:, 4] = S[:, 4] ^ S[:, 0]
+    S[:, 15] = S[:, 15] ^ S[:, 0]
+    # wykoanie ROR15
+    S = RORn(S, 15)
+    # wykonanie SMIX
+    S = SMIX(S)
+    S[:, 4] = S[:, 4] ^ S[:, 0]
+    S[:, 16] = S[:, 16] ^ S[:, 0]
+    # wykoanie ROR14
+    S = RORn(S, 14)
+    # wykonanie SMIX
+    S = SMIX(S)
+# S_4 += S_0
+S[:, 4] = S[:, 4] ^ S[:, 0]
+# S_15 += S_0
+S[:, 15] = S[:, 15] ^ S[:, 0]
+
+print("Macierz S po The Final Round G")
+print(S)
