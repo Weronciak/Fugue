@@ -195,6 +195,45 @@ def S_BOX (s_box, W):
             # przypisujemy do W[i,j] wartosc z s_box[row][column]
             W[i, j] = s_box[row][ column]
     return W
+
+# SMIX
+# zawiera S-box oraz Super-Mix 
+# S-box jest zdefiniowany w oddzielnej funkcji, tutaj jest tylko wywolywany
+# tutaj bedzie zdefiniowany Super-Mix
+def SMIX(S):
+    # z macierzy S bierzemy pierwsze 4 kolumny i tworzymy z nich 4x4 macierz W
+    W = S[:, :4]
+    # wszystkie operacje beda wykonywane na macierzy W
+    # najpierw wykonany bedzie S-BOX
+    W = S_BOX(s_box, W)
+    # macierz W przeksztalcamy w wentor W gdzie (i+4j)bajt wektora to bajt z i-tego wiersza i j-tej kolumny macierzy
+    W = [W[0, 0], W[0, 1], W[0, 2], W[0, 3], W[1, 0], W[1, 1], W[1, 2], W[1, 3], W[2, 0], W[2, 1], W[2, 2], W[2, 3], W[3, 0], W[3, 1], W[3, 2], W[3, 3]]
+    # Super-Mix
+    # N_t - transponowana macierz N
+    N_t = np.transpose(N)
+    # N_W - wynik mnożenia macierzy N oraz wektora W
+    N_W = np.dot(N, W)
+    # wyniki musza byc w ciele GF(2^8) dlatego wykonywane jest modulo 256
+    for i in range(len(N_W)):
+        N_W = N_W % 256
+    #tworzymy wektor pomocniczy:
+    """
+    suma(i!=j)=W[0,1]+W[0,2]+W[0,3]                0                           0                                 0
+                  0                 suma(i!=j)=W[1,0]+W[1,2]+W[1,3]            0                                 0
+                  0                                0               suma(i!=j)=W[2,0]+W[2,1]+W[2,3]               0
+                  0                                0                           0                  suma(i!=j)=W[3,0]+W[3,1]+W[3,2] 
+    """
+    wektor_pom = [W[1]^W[2]^W[3], 0, 0, 0, 0, W[4]^W[6]^W[7], 0, 0, 0, 0, W[8]^W[9]^W[11], 0, 0, 0, 0, W[12]^W[13]^W[14]]
+    # N_t_wektor_pom - wynik mnożenia macierzy N_t oraz wektoa pomocniczego
+    N_t_wektor_pom = np.dot(N_t, wektor_pom)
+    # wyniki musza byc w ciele GF(2^8) dlatego wykonywane jest modulo 256
+    for i in range(len(N_t_wektor_pom)):
+        N_t_wektor_pom = N_t_wektor_pom % 256
+    # teraz W = N_W + N_t_wektor_pom
+    W = N_W ^ N_t_wektor_pom
+    #S[:, :4] = W
+    # teraz macierz W zmieniana jest na macierz 4x4 oraz jej wartosci sa przypisane do pierwszech 4 kolumn i wierszy macierzy S za pomoca reshape
+    S[:, :4] = W.reshape((4, 4))
     return S
 # otwieramy plik do odczytu
 # przypisujemy zawartosc pliku do zmiennej zawartosc_pliku
