@@ -1,9 +1,4 @@
-# umozliwienie skracania dowolnie dlugich plikow zadanych nazwa pliku +
-# umozliwienie ustalenia dlugosci generowanego skrotu w bajtach (od 1 do maksymalnej, oryginalnej dlugosci skrotu:
-# generowanie skrotow krotszych odbywa sie poprzez obciecie oryginalnego skrotu do zadanej dlugosci)
-# wyswietlanie na ekran: nazwy skracanego pliku, dlugosc generowanego skrotu, wartosc skrotu szestnastkowo
-# zapisanie uzyskanego skrotu do pliku +
-# sprawdzenie poprzez wektory testowe
+# FUGUE 256 - implementacja
 
 import math
 import numpy as np
@@ -56,6 +51,7 @@ def ZapisDoPliku(skrot):
     file_k = open("plik_skrot.txt", mode = 'w')
     file_k.write(skrot)
     file_k.close()
+    print("Skrot zostal zapisany do: plik_skrot.txt")
     return 
 
 # PADDING
@@ -67,6 +63,7 @@ def ZapisDoPliku(skrot):
 # X' zamieniamy na reprezentacje m bajtowa
 # nastepnie dlugosc n przedstawiamy w reprezentacji jako osmiobajtowa liczba calkowita (big-endian)
 # X" to X' + osmiobajtowa reprezentacja n
+# na koniec X" dzielimy na czterobajtowe slowa
 def Padding(zawartosc_pliku):
     # zamieniamy zmienna zawartosc_pliku ktora jest typu string (jest to ciag znakow, liter, liczb) na zapis binarny
     # binary_string - jest to zmienna ktora bedzie przechowywala reprezentacje binanra zmiennej zawartosc_pliku
@@ -105,7 +102,7 @@ def Padding(zawartosc_pliku):
 
     # podzial otrzymanej wartosci po 4 bajty (32 bity)
     # bedzie to wykorzystywane w pozostalych funkcjach 
-    # X_2_koncowa - tablica przegowujaca po 4 bajty wartosci koncowej
+    # X_2_koncowa - tablica przechowujaca po 4 bajty wartosci koncowej otrzymanej podczas wykonywania paddingu
     X_2_koncowa = []
     for i in range(0, int((len(bin(X_2)[2:]))/32)):
         # w naszej zmiennej temp pozostaja ostatnie (najmlodsze) bity wartosci wejsciowej 
@@ -114,8 +111,8 @@ def Padding(zawartosc_pliku):
         X_2_koncowa.append(temp)
         # nastepnie przesuwamy o 32 bity w prawo aby zajac sie nastepnymi 32 bitami
         X_2 = X_2 >> 32
-    print("Z paddingu otrzymalismy:")
-    print(X_2_koncowa)
+    #print("Z paddingu otrzymalismy:")
+    #print(X_2_koncowa)
     return X_2_koncowa
 
 # Inicjalize State
@@ -130,8 +127,6 @@ def Inicjalize_State(vector_IV):
     S = np.zeros((4, 30), dtype = int)
     for j in range(0, 8):
         S[:, 22 + j] = vector_IV[:, j].flatten()
-    print("Macierz po Inicjalize State:")
-    print(S)
     return S
 
 # TIX(P_i)
@@ -235,6 +230,7 @@ def SMIX(S):
     # teraz macierz W zmieniana jest na macierz 4x4 oraz jej wartosci sa przypisane do pierwszech 4 kolumn i wierszy macierzy S za pomoca reshape
     S[:, :4] = W.reshape((4, 4))
     return S
+
 # ostateczna funkcja tworzenia skrotu wiadomosci
 # skrot ma 256 bitow czyli 32 bajty
 def Tworzenie_Skrotu(S):
@@ -251,6 +247,7 @@ def Tworzenie_Skrotu(S):
     # utworzony skrot liczy 256 bitow    
     skrot = int(skrot)    
     return skrot
+
 # generowanie skrotow o okreslonej dlugosci
 # obciecie oryginalnego skrotu do zadanej dlugosci
 def Skrot_Dlugosc(skrot, dlugosc_skrotu, w_skracania):
@@ -289,17 +286,21 @@ while ((int(w_skracania) != 1) and (int(w_skracania) != 2)):
     print("Wybierz 1 jesli chcesz aby skrot skladal sie z najstarszych bajtow")
     print("Wybierz 2 jesli chcesz aby skrot skladal sie z najmlodszych bajtow")
     w_skracania = input("Twoj wybor: ")
+
 # otwieramy plik do odczytu
 # przypisujemy zawartosc pliku do zmiennej zawartosc_pliku
 # zamykamy plik
-file_p = open("plik_tekst.txt", mode = 'r')
+file_p = open(nazwa_pliku, mode = 'r')
 zawartosc_pliku = file_p.read()
 file_p.close()
+
 # wykonanie paddingu na zawartosci z pliku
 X_2 = Padding(zawartosc_pliku)
 
 # tworzenie macierzy stanu S
 S = Inicjalize_State(vector_IV)
+#print("Macierz po Inicjalize State:")
+#print(S)
 
 # The Round Transformation R
 for i in range(0, len(X_2)):
@@ -318,8 +319,8 @@ for i in range(0, len(X_2)):
     # wykonanie SMIX
     S = SMIX(S)
 
-print("Macierz S po Round Transfotmatoin R")
-print(S)
+#print("Macierz S po Round Transfotmatoin R")
+#print(S)
 
 # The Final Round G
 # wykonanie 10 razy {ROR3;CMIX;SMIX}
@@ -351,5 +352,16 @@ S[:, 4] = S[:, 4] ^ S[:, 0]
 # S_15 += S_0
 S[:, 15] = S[:, 15] ^ S[:, 0]
 
-print("Macierz S po The Final Round G")
-print(S)
+#print("Macierz S po The Final Round G")
+#print(S)
+
+# tworzenie ostatecznego skrotu
+skrot = Tworzenie_Skrotu(S)
+print("\nSkrot: ", hex(skrot)[2:])   
+
+# generowanie skrotow o okreslonej dlugosci
+skrot = Skrot_Dlugosc(skrot, dlugosc_skrotu, w_skracania)
+print("Skrot: ", hex(skrot)[2:])
+
+# zapis skrotu do pliku
+ZapisDoPliku(hex(skrot)[2:])
