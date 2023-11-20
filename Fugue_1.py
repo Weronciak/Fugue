@@ -235,6 +235,22 @@ def SMIX(S):
     # teraz macierz W zmieniana jest na macierz 4x4 oraz jej wartosci sa przypisane do pierwszech 4 kolumn i wierszy macierzy S za pomoca reshape
     S[:, :4] = W.reshape((4, 4))
     return S
+# ostateczna funkcja tworzenia skrotu wiadomosci
+# skrot ma 256 bitow czyli 32 bajty
+def Tworzenie_Skrotu(S):
+    # skrot - 256 bitow wyjscia
+    # skrot tworza S1 S2 S3 S4 S15 S16 S17 S18
+    skrot = ""
+    nr_kolumn = [1, 2, 3, 4, 15, 16, 17, 18]
+    # po kolumnach
+    for i in nr_kolumn:
+        # po wierszach
+        for j in range(4):
+            # dopisywanie kolujnych wartosci macierzy jako string do zmiennej skrot
+            skrot  = skrot + str(S[j,i])
+    # utworzony skrot liczy 256 bitow    
+    skrot = int(skrot)    
+    return skrot
 # otwieramy plik do odczytu
 # przypisujemy zawartosc pliku do zmiennej zawartosc_pliku
 # zamykamy plik
