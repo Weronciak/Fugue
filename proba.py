@@ -58,7 +58,7 @@ X_2 = X_1 + b_s_len_int
 # X_2_koncowa - tablica przegowujaca po 4 bajty wartosci koncowej
 X_2_koncowa = []
 for i in range(0, int((len(bin(X_2)[2:]))/32)):
-    # w naszej zmiennej temp pozostaja ostatnie (najmlodsze) bity wartosci wejsciowej 
+    # w naszej zmiennej temp pozostaja ostatnie (najmlodsze) 32 bity wartosci wejsciowej 
     temp = X_2 & 0xffffffff
     # wpisujemy je do tablicy
     X_2_koncowa.append(temp)
@@ -108,6 +108,8 @@ s_box = [['63', '7c', '77', '7b', 'f2', '6b', '6f', 'c5', '30', '01', '67', '2b'
          ['e1', 'f8', '98', '11', '69', 'd9', '8e', '94', '9b', '1e', '87', 'e9', 'ce', '55', '28', 'df'],
          ['8c', 'a1', '89', '0d', 'bf', 'e6', '42', '68', '41', '99', '2d', '0f', 'b0', '54', 'bb', '16']]
 
+
+"""
 s_box = [[0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76], 
          [0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0],
          [0xb7, 0xfd, 0x93, 0x26, 0x36, 0x3f, 0xf7, 0xcc, 0x34, 0xa5, 0xe5, 0xf1, 0x71, 0xd8, 0x31, 0x15],
@@ -124,7 +126,6 @@ s_box = [[0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b
          [0x70, 0x3e, 0xb5, 0x66, 0x48, 0x03, 0xf6, 0x0e, 0x61, 0x35, 0x57, 0xb9, 0x86, 0xc1, 0x1d, 0x9e],
          [0xe1, 0xf8, 0x98, 0x11, 0x69, 0xd9, 0x8e, 0x94, 0x9b, 0x1e, 0x87, 0xe9, 0xce, 0x55, 0x28, 0xdf],
          [0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16]]
-
 """
 s_box = [[99, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 215, 171, 118], 
          [202, 130, 201, 125, 250, 89, 71, 240, 173, 212, 162, 175, 156, 164, 114, 192],
@@ -143,7 +144,8 @@ s_box = [[99, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 215, 171, 
          [225, 248, 152, 17, 105, 217, 142, 148, 155, 30, 135, 233, 206, 85, 40, 223],
          [140, 161, 137, 13, 191, 230, 66, 104, 65, 153, 45, 15, 176, 84, 187, 22]]
 
-
+print(s_box)
+"""
 """
 # wektor inicjalizujacy vector_IV to macierz
 vector_IV = np.matrix([
@@ -152,7 +154,7 @@ vector_IV = np.matrix([
                        ['bd', '13', 'f6', 'b5', '62', '29', 'e8', 'c2'], 
                        ['de', '5f', '68', '94', '1d', 'de', '99', '48']
                        ])
-"""
+
 vector_IV = np.matrix([
                        [233, 102, 224, 210, 249, 251, 145, 52], 
                        [82, 113, 212, 176, 108, 249, 73, 248], 
@@ -160,7 +162,9 @@ vector_IV = np.matrix([
                        [222, 95, 104, 148, 29, 222, 153, 72]
                        ])
 
-"""
+print(vector_IV)
+
+
 # zamiana string na int i dzialanie xor na tych wartosciach
 z = int(vector_IV[0,0],16)
 print(z)
@@ -169,13 +173,15 @@ z_1 =int(vector_IV[0,1], 16)
 w = z ^ z_1
 print(w)
 """
-"""
+
 vector_IV = np.matrix([[0xe9, 0x66, 0xe0, 0xd2, 0xf9, 0xfb, 0x91, 0x34], 
                        [0x52, 0x71, 0xd4, 0xb0, 0x6c, 0xf9, 0x49, 0xf8], 
                        [0xbd, 0x13, 0xf6, 0xb5, 0x62, 0x29, 0xe8, 0xc2], 
                        [0xde, 0x5f, 0x68, 0x94, 0x1d, 0xde, 0x99, 0x48]])
 print(vector_IV)
+
 """
+### FUGUE 256 PARAMETRYZOWANE ###
 # parametry:
 # s - rozmiar stanu, liczba 4 bajtowych kolumn 
 s = 30
@@ -201,7 +207,8 @@ for j in range(0, n):
 print(S)
 
 
-# TIX[s,k](P)
+# TIX[s,k](P_i)
+# to jest dla wszystkich elementow P_i
 for j in range(0, len(X_2_koncowa)):
     # tworze wektor 4 bajtowy 
     # biore wartosc zmiennej i przesuwam o podana ilosc bitow za pomoca >> w prawo a nastepnie biore otatnie (najmlodsze) 8 bitow
@@ -220,7 +227,7 @@ print(S)
 # ROR3
 # rotacja kolumn macierzy S w prawo o 3 kolumny
 # trzeba zrobic kopie macierzy S, 
-# poniewaz temp = S powoduje ze do zmiennej temp oraz S przypisana jest ta sama macierz
+# poniewaz temp = S powoduje ze do zmiennej temp oraz S przypisana jest ta sama macierz i przy zmianie macierzy zmienia sie zarowno S jak i temp
 temp = S.copy()
 for i in range(0, s):
     # indeks kolumny, modulo 30 zeby uniknac ujemnych wartosci
@@ -245,6 +252,7 @@ S[:, (s//2 + 2)] = S[:, (s//2 + 2)] ^ S[:, 6]
 print(S)
 
 """
+### PODSTAWOWE FUGUE 256 ###
 # Inicjalize State
 # for j in range(0, 22):
 # S[:,j] = 0
@@ -255,7 +263,8 @@ print(S)
 S = np.zeros((4, 30), dtype = int)
 for j in range(0, 8):
     S[:, 22 + j] = vector_IV[:, j].flatten()
-print(S)
+#print(S)
+
 
 # TIX(P_i)
 # dla kazdego elementu P_i ktory jest elementem z x_2_koncowa
@@ -310,7 +319,7 @@ def CMIX(S):
     S[:, 17] = S[:, 17] ^ S[:, 6]
     return S
 S = CMIX(S)
-print("C", S)
+print("po cmix", S)
 
 # S-BOX
 # skrzynka podstawieniowa
@@ -387,7 +396,9 @@ def SMIX(S):
     S[:, :4] = W.reshape((4, 4))
     return S
 S = SMIX(S)
-print("po smix:", S)# ostateczna funkcja tworzenia skrotu wiadomosci
+print("po smix:", S)
+
+# ostateczna funkcja tworzenia skrotu wiadomosci
 def tworzenie_skrotu(S):
     # skrot - 256 bitow wyjscia
     # skrot tworza S1 S2 S3 S4 S15 S16 S17 S18
@@ -425,3 +436,4 @@ while(i < int(dlugosc_skrotu)):
     i = i + 1
 skrot = skrot & mnoznik 
 print(hex(skrot)[2:])
+
