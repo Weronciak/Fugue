@@ -251,6 +251,25 @@ def Tworzenie_Skrotu(S):
     # utworzony skrot liczy 256 bitow    
     skrot = int(skrot)    
     return skrot
+# generowanie skrotow o okreslonej dlugosci
+# obciecie oryginalnego skrotu do zadanej dlugosci
+def Skrot_Dlugosc(skrot, dlugosc_skrotu, w_skracania):
+    # moj skrot to najstarsze bajty:
+    if(int(w_skracania) == 1):
+        # przesuniecie bitowe w prawo >> (32 - dlugosc_skrotu) * 8
+        skrot = skrot >> ((32 - int(dlugosc_skrotu)) * 8)
+    else:
+        # moj skrot do najmlodsze bajty
+        i = 1
+        mnoznik = 0xff
+        while(i < int(dlugosc_skrotu)):
+            # przesuniecie bitowe w lewo (dodanie 8 bitow 0)
+            mnoznik = mnoznik << 8
+            # dopisanie na koncu mnoznika (8 ostatnich bitow) wartosc ff czyli 11111111
+            mnoznik = mnoznik | 0xff
+            i = i + 1
+        skrot = skrot & mnoznik 
+    return skrot
 # otwieramy plik do odczytu
 # przypisujemy zawartosc pliku do zmiennej zawartosc_pliku
 # zamykamy plik
