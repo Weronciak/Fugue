@@ -387,4 +387,41 @@ def SMIX(S):
     S[:, :4] = W.reshape((4, 4))
     return S
 S = SMIX(S)
-print("po smix:", S)
+print("po smix:", S)# ostateczna funkcja tworzenia skrotu wiadomosci
+def tworzenie_skrotu(S):
+    # skrot - 256 bitow wyjscia
+    # skrot tworza S1 S2 S3 S4 S15 S16 S17 S18
+    skrot = str(0)
+    nr_kolumn = [1, 2, 3, 4, 15, 16, 17, 18]
+    # po kolumnach
+    for i in nr_kolumn:
+        # po wierszach
+        for j in range(4):
+            # dopisywanie kolujnych wartosci macierzy jako string do zmiennej skrot
+            skrot  = skrot + str(S[j,i])
+    # utworzony skrot liczy 256 bitow      
+    skrot = int(skrot)
+    print(hex(skrot)[2:])
+    print(hex(skrot)[2:])
+
+    return skrot
+
+skrot = tworzenie_skrotu(S, 30)
+dlugosc_skrotu = 4
+
+# biore najstarszy bajt:
+# pzresuniecie bitowe w prawo >> (32 - dlugosc_skrotu) * 8
+# przesuniecie bitowe w prawo >> (32 - dlugosc_skrotu) * 8
+skrot = skrot >> ((32 - int(dlugosc_skrotu)) * 8)
+print(hex(skrot)[2:])
+#  biore najmlodszy bajt
+i = 1
+mnoznik = 0xff
+while(i < int(dlugosc_skrotu)):
+    # przesuniecie bitowe w lewo (dodanie 8 bitow 0)
+    mnoznik = mnoznik << 8
+    # dopisanie na koncu mnoznika (8 ostatnich bitow) wartosc ff czyli 11111111
+    mnoznik = mnoznik + 0xff
+    i = i + 1
+skrot = skrot & mnoznik 
+print(hex(skrot)[2:])
