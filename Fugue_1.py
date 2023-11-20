@@ -270,6 +270,25 @@ def Skrot_Dlugosc(skrot, dlugosc_skrotu, w_skracania):
             i = i + 1
         skrot = skrot & mnoznik 
     return skrot
+
+nazwa_pliku = input("Podaj nazwe pliku do skrocenia:")
+print("Skracany plik: ", nazwa_pliku)
+dlugosc_skrotu = input("\nPodaj dlugoc generowanego skrotu w bajtach od 1 do 32: ")
+# dopoki nie zostanie podana wartosc dlugosci skrotu z przedzialu od 1 do 32
+while ((int(dlugosc_skrotu) < 1) or (int(dlugosc_skrotu) > 32)):
+    print("Bledna wartosc dlugosci skrotu")   
+    dlugosc_skrotu = input("Podaj dlugoc generowanego skrotu w bajtach od 1 do 32: ")
+print("Dlugosc generowanego skrotu: ", dlugosc_skrotu)
+
+print("\nWybor sposob skaracania oryginalnego skrotu:")
+print("Wybierz 1 jesli chcesz aby skrot skladal sie z najstarszych bajtow")
+print("Wybierz 2 jesli chcesz aby skrot skladal sie z najmlodszych bajtow")
+w_skracania = input("Twoj wybor: ")
+while ((int(w_skracania) != 1) and (int(w_skracania) != 2)):
+    print("Wybor sposob skaracania oryginalnego skrotu:")
+    print("Wybierz 1 jesli chcesz aby skrot skladal sie z najstarszych bajtow")
+    print("Wybierz 2 jesli chcesz aby skrot skladal sie z najmlodszych bajtow")
+    w_skracania = input("Twoj wybor: ")
 # otwieramy plik do odczytu
 # przypisujemy zawartosc pliku do zmiennej zawartosc_pliku
 # zamykamy plik
