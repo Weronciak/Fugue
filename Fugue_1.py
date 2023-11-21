@@ -254,10 +254,12 @@ def Tworzenie_Skrotu(S):
     for i in nr_kolumn:
         # po wierszach
         for j in range(4):
-            # dopisywanie kolujnych wartosci macierzy jako string do zmiennej skrot
-            skrot  = skrot + str(S[j,i])
+            # dopisywanie kolejnych wartosci macierzy jako string do zmiennej skrot
+            # string od wartosci hex bez przedrostka 0x oraz z dopelnieniem do 2 liczb hex
+            # aby uniknac ewentualnych problemow gdy element z macierzy da sie zapisac jako jeden znak hex - to zmieniloby dlugosc sktoru
+            skrot  = skrot + str(hex(S[j,i])[2:].zfill(2))
     # utworzony skrot liczy 256 bitow    
-    skrot = int(skrot)    
+    skrot = int(skrot ,16)   
     return skrot
 
 # generowanie skrotow o okreslonej dlugosci
@@ -369,11 +371,11 @@ S[:, 15] = S[:, 15] ^ S[:, 0]
 
 # tworzenie ostatecznego skrotu
 skrot = Tworzenie_Skrotu(S)
-print("\nSkrot: ", hex(skrot)[2:])   
+print("\nSkrot 256 bitowy: ", hex(skrot)[2:])   
 
 # generowanie skrotow o okreslonej dlugosci
 skrot = Skrot_Dlugosc(skrot, dlugosc_skrotu, w_skracania)
-print("Skrot: ", hex(skrot)[2:])
+print("Skrot o wybranej dlugosci: ", hex(skrot)[2:])
 
 # zapis skrotu do pliku
 ZapisDoPliku(hex(skrot)[2:])
