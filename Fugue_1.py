@@ -227,8 +227,20 @@ def SMIX(S):
     # teraz W = N_W + N_t_wektor_pom
     W = N_W ^ N_t_wektor_pom
     #S[:, :4] = W
-    # teraz macierz W zmieniana jest na macierz 4x4 oraz jej wartosci sa przypisane do pierwszech 4 kolumn i wierszy macierzy S za pomoca reshape
-    S[:, :4] = W.reshape((4, 4))
+    # teraz macierz W zmieniana jest na macierz 4x4 oraz jej wartosci sa przypisane do macierzy W_m za pomoca reshape
+    # W_m - macierz potrzebna do wykonania ROl - rotacji w lewo
+    W_m = np.zeros((4, 4), dtype = int)
+    W_m = W.reshape((4, 4))
+
+    # ROL: rotuje i-ty wiersz w lewo o i bitów
+    # poniewaz temp = W_m powoduje ze do zmiennej temp oraz W_m przypisana jest ta sama macierz i przy zmianie macierzy zmienia sie zarowno W_m jak i temp
+    temp = W_m.copy()
+    for i in range(4):
+        for j in range(4):
+            W_m[i, j] = temp[i, (j + i) % 4]
+
+    # W-m jest przypisane do pierwszech 4 kolumn i wierszy macierzy S
+    S[:, :4] = W_m
     return S
 
 # ostateczna funkcja tworzenia skrotu wiadomosci
